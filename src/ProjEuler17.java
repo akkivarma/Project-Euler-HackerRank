@@ -45,27 +45,21 @@ class ProjEuler17 {
         Stack<String> wrds = new Stack<>();
 
         for(st = n.length - 1, ed = st - 2; st >= 0; st -= 3, ed -= 3) {
-//            pn("st : " + st + " ed : " + ed);
             if(p > 1) {
-//                pn("p : " + p);
                 if(czf == 1 & !wrds.isEmpty()) {
                     wrds.pop();
                 }
                 wrds.push(wrdMp.get(p));
             }
 
-            long p2 = 1;
-            long num = 0;
-            boolean pushed = false;
+            long p2 = 1; long num = 0; boolean pushed = false;
             czf = 0;
             for(int i = st; i >= ed && i >= 0; i--) {
                 long curNo = Character.getNumericValue(n[i]);
                 num = num + (curNo * p2);
-//                pn(curNo + " " + num + " " + p);
-                if(num == 0 && n.length > 1) {
-                    p2 *= 10;
-                    p *= 10;
-                    czf = 1;
+                if(curNo == 0 && n.length > 1) {
+                    p2 *= 10; p *= 10;
+                    if(!pushed) czf = 1;
                     continue;
                 }
 
@@ -83,10 +77,8 @@ class ProjEuler17 {
                 }
 
                 pushed = true;
-                p2 *= 10;
-                p *= 10;
+                p2 *= 10; p *= 10;
             }
-//            printStack(wrds);
         }
 
         while(!wrds.isEmpty()) {
@@ -95,14 +87,6 @@ class ProjEuler17 {
             if(!wrds.isEmpty()) {
                 p(" ");
             }
-        }
-        pn("");
-    }
-
-    static void printStack(Stack<String> stk) {
-        Iterator<String> itr = stk.iterator();
-        while(itr.hasNext()) {
-            p(itr.next() + " ");
         }
         pn("");
     }
@@ -231,5 +215,4 @@ class ProjEuler17 {
             din.close();
         }
     }
->>>>>>> 8249390d0aa596a5054b67377ea838d5cb95812e
 }
