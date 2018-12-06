@@ -4,7 +4,6 @@ import java.io.*;
 class ProjEuler17 {
     static FastReader in;
     static PrintWriter out;
-//    static String tens[], nums[], nums2[], hund[];
     static HashMap<Long, String> wrdMp;
 
     public static void main(String[] args) throws IOException {
@@ -33,59 +32,71 @@ class ProjEuler17 {
         wrdMp.put(60L, "Sixty"); wrdMp.put(70L, "Seventy"); wrdMp.put(80L, "Eighty"); wrdMp.put(90L, "Ninety");
         wrdMp.put(100L, "Hundred"); wrdMp.put(1000L, "Thousand"); wrdMp.put(1_000_000L, "Million");
         wrdMp.put(1_000_000_000L, "Billion"); wrdMp.put(1_000_000_000_000L, "Trillion");
-
-//        nums = new String[]{"Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"};
-//        nums2 = new String[]{"", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"};
-//        tens = new String[]{"Ten", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"};
-//        hund = new String[]{"", "Hundred", "Thousand", "Million", "Billion", "Trillion"};
     }
 
     static void solve() throws IOException {
-        // 104 382 426 112
-        char[] n = in.readLine().toCharArray();
+        char[] n = Long.toString(in.nextLong()).toCharArray();
         numToWrd(n);
     }
 
     static void numToWrd(char[] n) {
-        int st, ed, p = 1;
+        int st, ed, czf = 0;
+        long p = 1;
         Stack<String> wrds = new Stack<>();
 
-        for(st = n.length - 1, ed = st - 3; st >= 0; st -= 3, ed -= 3) {
-            long num = 0;
+        for(st = n.length - 1, ed = st - 2; st >= 0; st -= 3, ed -= 3) {
+//            pn("st : " + st + " ed : " + ed);
             if(p > 1) {
-                pn("p : " + p);
-                wrds.push(getWordFrmNum(p));
+//                pn("p : " + p);
+                if(czf == 1 & !wrds.isEmpty()) {
+                    wrds.pop();
+                }
+                wrds.push(wrdMp.get(p));
             }
 
+            long p2 = 1;
+            long num = 0;
+            boolean pushed = false;
+            czf = 0;
             for(int i = st; i >= ed && i >= 0; i--) {
-                int curNo = Character.getNumericValue(n[i]);
-                num = num + (curNo * p);
-//                pn(num);
-                if(!wrds.isEmpty() && wrdMp.containsKey(num)) {
+                long curNo = Character.getNumericValue(n[i]);
+                num = num + (curNo * p2);
+//                pn(curNo + " " + num + " " + p);
+                if(num == 0 && n.length > 1) {
+                    p2 *= 10;
+                    p *= 10;
+                    czf = 1;
+                    continue;
+                }
+
+                czf = 0;
+                if(pushed && wrdMp.containsKey(num)) {
                     wrds.pop();
-                    wrds.push(getWordFrmNum(num));
+                    wrds.push(wrdMp.get(num));
                 }
                 else if(num >= 100) {
-                    wrds.push(getWordFrmNum(100));
-                    wrds.push(getWordFrmNum(curNo));
+                    wrds.push(wrdMp.get(100L));
+                    wrds.push(wrdMp.get(curNo));
                 }
                 else {
-                    wrds.push(getWordFrmNum(curNo * p));
+                    wrds.push(wrdMp.get(curNo * p2));
                 }
 
-                p = p * 10;
-//                printStack(wrds);
+                pushed = true;
+                p2 *= 10;
+                p *= 10;
             }
+//            printStack(wrds);
         }
 
         while(!wrds.isEmpty()) {
-            p(wrds.pop() + " ");
+            p(wrds.pop());
+
+            if(!wrds.isEmpty()) {
+                p(" ");
+            }
         }
         pn("");
-    }
-
-    static String getWordFrmNum(long n) {
-        return wrdMp.get(n);
     }
 
     static void printStack(Stack<String> stk) {
@@ -220,4 +231,5 @@ class ProjEuler17 {
             din.close();
         }
     }
+>>>>>>> 8249390d0aa596a5054b67377ea838d5cb95812e
 }
